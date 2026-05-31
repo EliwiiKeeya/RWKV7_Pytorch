@@ -71,16 +71,16 @@ def run_inference_and_save(
     else:
         start_idx = 0
 
-    # 加载模型
-    model = RWKV_RNN(args).to(device)
-    model.eval()
-
     num_batches = len(input_tokens) // batch_size + (1 if len(input_tokens) % batch_size != 0 else 0)  # 计算批次数量
 
     for batch_idx in range(start_idx // batch_size, num_batches):
         start = batch_idx * batch_size
         end = min(start + batch_size, len(input_tokens))
         tokens = input_tokens[start:end]
+
+        # 加载模型
+        model = RWKV_RNN(args).to(device)
+        model.eval()
 
         # 推理：逐 token 输入，获得 input_logits
         for token_idx in range(LENGTH_TOKEN_INPUT):
